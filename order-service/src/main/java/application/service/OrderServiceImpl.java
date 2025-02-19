@@ -8,13 +8,15 @@ import application.entity.OrderItem;
 import application.exception.OrderNotFoundException;
 import application.repository.OrderEntityRepository;
 import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Service
 public class OrderServiceImpl implements OrderService {
-    private OrderEntityRepository orderEntityRepository;
-    private ModelMapper modelMapper;
+    private final OrderEntityRepository orderEntityRepository;
+    private final ModelMapper modelMapper;
 
     public OrderServiceImpl(OrderEntityRepository orderEntityRepository, ModelMapper modelMapper) {
         this.orderEntityRepository = orderEntityRepository;

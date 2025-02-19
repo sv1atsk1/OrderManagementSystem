@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: PRODUCT-SERVICE
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+      register-with-eureka: true # Регистрация с Eureka
+      fetch-registry: true # Получение информации о других сервисах
+
