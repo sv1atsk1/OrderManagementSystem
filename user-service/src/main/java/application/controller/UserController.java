@@ -2,7 +2,10 @@ package application.controller;
 
 import application.dto.UserDTO;
 import application.service.UserServiceImpl;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/users")
@@ -14,13 +17,26 @@ public class UserController {
         this.userServiceImpl = userServiceImpl;
     }
 
-    @PostMapping("/register")
-    public UserDTO addNewUser(@RequestBody UserDTO userDTO) {
-        return userServiceImpl.createUser(userDTO);
-    }
-
     @GetMapping("/{id}")
     public UserDTO getUserById(@PathVariable Long id) {
         return userServiceImpl.getUserById(id);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<UserDTO>> getAllUsers() {
+        List<UserDTO> users = userServiceImpl.getAllUsers();
+        return ResponseEntity.ok(users);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<UserDTO> updateUser(@PathVariable Long id, @RequestBody UserDTO userDTO) {
+        UserDTO updatedUser = userServiceImpl.updateUser(id, userDTO);
+        return ResponseEntity.ok(updatedUser);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+        userServiceImpl.deleteUser(id);
+        return ResponseEntity.noContent().build();
     }
 }

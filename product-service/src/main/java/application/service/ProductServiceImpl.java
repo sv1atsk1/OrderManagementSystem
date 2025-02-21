@@ -5,10 +5,12 @@ import application.entity.Product;
 import application.exception.ProductNotFoundException;
 import application.repository.ProductRepository;
 import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Service
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final ModelMapper modelMapper;

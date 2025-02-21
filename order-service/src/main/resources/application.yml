@@ -7,6 +7,5 @@ eureka:
     service-url:
       defaultZone: http://localhost:8761/eureka/
 
-      register-with-eureka: false # Регистрация с Eureka
-      fetch-registry: false # Получение информации о других сервисах
-
+      register-with-eureka: true
+      fetch-registry: true
