@@ -17,12 +17,18 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping
-    public UserDTO createUser(@RequestBody UserDTO userDTO) {
-        return userService.createUser(userDTO);
+    @PostMapping("/register")
+    public void registerUser(@RequestBody UserDTO userDTO) {
+        userService.registerUser(userDTO);
     }
-    @GetMapping("/{id}")
-    public UserDTO getUserById(@PathVariable Long id) {
+
+    @GetMapping("/username/{username}")
+    public UserDTO getUserByUsername(@PathVariable("username") String username) {
+        return userService.getUserByUsername(username);
+    }
+
+    @GetMapping("/id/{id}")
+    public UserDTO getUserById(@PathVariable("id") Long id) {
         return userService.getUserById(id);
     }
 
@@ -33,13 +39,13 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserDTO> updateUser(@PathVariable Long id, @RequestBody UserDTO userDTO) {
+    public ResponseEntity<UserDTO> updateUser(@PathVariable("id") Long id, @RequestBody UserDTO userDTO) {
         UserDTO updatedUser = userService.updateUser(id, userDTO);
         return ResponseEntity.ok(updatedUser);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteUser(@PathVariable("id") Long id) {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }

@@ -5,9 +5,11 @@ import application.dto.UserDTO;
 import java.util.List;
 
 public interface UserService {
-    UserDTO createUser(UserDTO userDTO);
+    UserDTO registerUser(UserDTO userDTO);
 
     UserDTO getUserById(Long id);
+
+    UserDTO getUserByUsername(String username);
 
     List<UserDTO> getAllUsers();
 

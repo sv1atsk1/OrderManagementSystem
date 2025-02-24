@@ -12,12 +12,14 @@ import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 @Service
 public class JWTService {
 
     public static final String SECRET = "YOUR_SECRET";
 
+    private static final Logger logger = Logger.getLogger(JWTService.class.getName());
     private static final long EXPIRATION_TIME = 900000;
 
     public Claims validateToken(String token) {
@@ -33,6 +35,7 @@ public class JWTService {
     }
 
     public String generateToken(String userName) {
+        logger.info("Generating token for user: " + userName);
         Map<String, Object> claims = new HashMap<>();
         claims.put("username", userName);
 
