@@ -1,6 +1,6 @@
 package application.config;
 
-import application.repository.UserRepository;
+import application.client.UserServiceClient;
 import application.service.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,15 +23,15 @@ import java.util.Arrays;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-    private final UserRepository userRepository;
+    private final UserServiceClient userServiceClient;
 
-    public SecurityConfig(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public SecurityConfig(UserServiceClient userServiceClient) {
+        this.userServiceClient = userServiceClient;
     }
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return new CustomUserDetailsService(userRepository);
+        return new CustomUserDetailsService(userServiceClient);
     }
 
     @Bean

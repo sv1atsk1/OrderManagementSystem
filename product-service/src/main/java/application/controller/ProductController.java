@@ -1,7 +1,7 @@
 package application.controller;
 
 import application.dto.ProductDTO;
-import application.service.ProductServiceImpl;
+import application.service.ProductService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,45 +12,45 @@ import java.util.List;
 @RequestMapping("/products")
 public class ProductController {
 
-    private final ProductServiceImpl productServiceImpl;
+    private final ProductService productService;
 
-    public ProductController(ProductServiceImpl productServiceImpl) {
-        this.productServiceImpl = productServiceImpl;
+    public ProductController(ProductService productService) {
+        this.productService = productService;
     }
 
     @PostMapping
     public ResponseEntity<ProductDTO> createProduct(@RequestBody ProductDTO productDTO) {
-        ProductDTO createdProduct = productServiceImpl.createProduct(productDTO);
+        ProductDTO createdProduct = productService.createProduct(productDTO);
         return new ResponseEntity<>(createdProduct, HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ProductDTO> getProductById(@PathVariable Long id) {
-        ProductDTO productDTO = productServiceImpl.getProductById(id);
+        ProductDTO productDTO = productService.getProductById(id);
         return ResponseEntity.ok(productDTO);
     }
 
     @GetMapping
     public ResponseEntity<List<ProductDTO>> getAllProducts() {
-        List<ProductDTO> products = productServiceImpl.getAllProducts();
+        List<ProductDTO> products = productService.getAllProducts();
         return ResponseEntity.ok(products);
     }
 
     @GetMapping("/category/{categoryId}")
     public ResponseEntity<List<ProductDTO>> getProductsByCategory(@PathVariable Long categoryId) {
-        List<ProductDTO> products = productServiceImpl.getProductsByCategory(categoryId);
+        List<ProductDTO> products = productService.getProductsByCategory(categoryId);
         return ResponseEntity.ok(products);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<ProductDTO> updateProduct(@PathVariable Long id, @RequestBody ProductDTO productDTO) {
-        ProductDTO updatedProduct = productServiceImpl.updateProduct(id, productDTO);
+        ProductDTO updatedProduct = productService.updateProduct(id, productDTO);
         return ResponseEntity.ok(updatedProduct);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
-        productServiceImpl.deleteProduct(id);
+        productService.deleteProduct(id);
         return ResponseEntity.noContent().build();
     }
 }

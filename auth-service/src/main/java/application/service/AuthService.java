@@ -18,4 +18,5 @@ public class AuthService {
     public Claims validateToken(String token) {
         return jwtService.validateToken(token);
     }
+
 }

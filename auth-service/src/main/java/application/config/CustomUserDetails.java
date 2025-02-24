@@ -1,6 +1,6 @@
 package application.config;
 
-import application.entity.User;
+import application.dto.AuthRequest;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -12,9 +12,9 @@ public class CustomUserDetails implements UserDetails {
 
     private final String password;
 
-    public CustomUserDetails(User user) {
-        this.username = user.getUsername();
-        this.password = user.getPassword();
+    public CustomUserDetails(AuthRequest authRequest) {
+        this.username = authRequest.getUsername();
+        this.password = authRequest.getPassword();
     }
 
     @Override
