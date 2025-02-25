@@ -17,7 +17,7 @@ import java.util.logging.Logger;
 @Service
 public class JWTService {
 
-    public static final String SECRET = "YOUR_SECRET";
+    public static final String SECRET = "";
 
     private static final Logger logger = Logger.getLogger(JWTService.class.getName());
     private static final long EXPIRATION_TIME = 900000;

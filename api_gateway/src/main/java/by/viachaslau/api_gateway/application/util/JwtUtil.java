@@ -12,7 +12,7 @@ import java.security.Key;
 public class JwtUtil {
 
 
-    public static final String SECRET = "YOUR_SECRET";
+    public static final String SECRET = "";
 
 
     public void validateToken(final String token) {
