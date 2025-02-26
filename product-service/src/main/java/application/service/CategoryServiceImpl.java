@@ -46,9 +46,28 @@ public class CategoryServiceImpl implements CategoryService {
     public CategoryDTO updateCategory(Long id, CategoryDTO categoryDTO) {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new CategoryNotFoundException(id));
-        modelMapper.map(categoryDTO, category);
+
+        updateCategoryFields(category, categoryDTO, true);
+
         Category updatedCategory = categoryRepository.save(category);
         return modelMapper.map(updatedCategory, CategoryDTO.class);
+    }
+
+    @Override
+    public CategoryDTO partialUpdateCategory(Long id, CategoryDTO categoryDTO) {
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new CategoryNotFoundException(id));
+
+        updateCategoryFields(category, categoryDTO, false);
+
+        Category updatedCategory = categoryRepository.save(category);
+        return modelMapper.map(updatedCategory, CategoryDTO.class);
+    }
+
+    private void updateCategoryFields(Category category, CategoryDTO categoryDTO, boolean isFullUpdate) {
+        if (isFullUpdate || categoryDTO.getName() != null) {
+            category.setName(categoryDTO.getName());
+        }
     }
 
     @Override

@@ -11,7 +11,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 @Configuration
 @EnableJpaRepositories(basePackages = "application.repository")
 public class JpaProductServiceConfiguration {
-    @Bean
+    @Bean(name = "transactionManager")
     public PlatformTransactionManager productTransactionManager(EntityManagerFactory entityManagerFactory) {
         return new JpaTransactionManager(entityManagerFactory);
     }
