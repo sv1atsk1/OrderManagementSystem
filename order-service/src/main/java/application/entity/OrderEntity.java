@@ -25,5 +25,8 @@ public class OrderEntity {
 
     @OneToMany(mappedBy = "orderEntity", cascade = CascadeType.ALL)
     private List<OrderItem> orderItems;
+
+    @Version
+    private Integer version = 0;
 }
 

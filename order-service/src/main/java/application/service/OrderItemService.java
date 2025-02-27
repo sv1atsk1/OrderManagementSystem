@@ -12,6 +12,7 @@ public interface OrderItemService {
     List<OrderItemDTO> getOrderItemsByOrderId(Long orderId);
 
     OrderItemDTO updateOrderItem(Long id, OrderItemDTO orderItemDTO);
+    OrderItemDTO patchOrderItem(Long id, OrderItemDTO orderItemDTO);
 
     void deleteOrderItem(Long id);
 }

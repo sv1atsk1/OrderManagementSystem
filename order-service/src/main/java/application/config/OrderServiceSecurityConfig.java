@@ -31,7 +31,7 @@ public class OrderServiceSecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/test/").permitAll()
+                        .requestMatchers("/users/id/{id}").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(new JwtOrderServiceAuthenticationFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);

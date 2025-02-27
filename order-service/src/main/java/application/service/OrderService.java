@@ -15,5 +15,7 @@ public interface OrderService {
 
     OrderDTO updateOrder(Long id, OrderDTO orderDTO);
 
+    OrderDTO patchOrder(Long id, OrderDTO orderDTO);
+
     void deleteOrder(Long id);
 }

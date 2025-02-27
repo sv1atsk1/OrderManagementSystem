@@ -32,7 +32,7 @@ public class UserServiceSecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/users/register", "/users/username/{username}").permitAll()
+                        .requestMatchers("/users/register", "/users/username/{username}", "/users/id/{id}").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(new JwtUserServiceAuthenticationFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);

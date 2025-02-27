@@ -23,4 +23,7 @@ public class OrderItem {
     @ManyToOne
     @JoinColumn(name = "order_id", nullable = false)
     private OrderEntity orderEntity;
+
+    @Version
+    private Integer version = 0;
 }

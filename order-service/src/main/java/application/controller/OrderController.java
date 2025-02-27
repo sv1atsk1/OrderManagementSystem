@@ -25,7 +25,7 @@ public class OrderController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<OrderDTO> getOrderById(@PathVariable Long id) {
+    public ResponseEntity<OrderDTO> getOrderById(@PathVariable("id") Long id) {
         OrderDTO orderDTO = orderService.getOrderById(id);
         return ResponseEntity.ok(orderDTO);
     }
@@ -37,19 +37,25 @@ public class OrderController {
     }
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<OrderDTO>> getOrdersByUser(@PathVariable Long userId) {
+    public ResponseEntity<List<OrderDTO>> getOrdersByUser(@PathVariable("userId") Long userId) {
         List<OrderDTO> orders = orderService.getOrdersByUser(userId);
         return ResponseEntity.ok(orders);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<OrderDTO> updateOrder(@PathVariable Long id, @RequestBody OrderDTO orderDTO) {
+    public ResponseEntity<OrderDTO> updateOrder(@PathVariable("id") Long id, @RequestBody OrderDTO orderDTO) {
         OrderDTO updatedOrder = orderService.updateOrder(id, orderDTO);
         return ResponseEntity.ok(updatedOrder);
     }
 
+    @PatchMapping("/{id}")
+    public ResponseEntity<OrderDTO> patchOrder(@PathVariable("id") Long id, @RequestBody OrderDTO orderDTO) {
+        OrderDTO patchedOrder = orderService.patchOrder(id, orderDTO);
+        return ResponseEntity.ok(patchedOrder);
+    }
+
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteOrder(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteOrder(@PathVariable("id") Long id) {
         orderService.deleteOrder(id);
         return ResponseEntity.noContent().build();
     }

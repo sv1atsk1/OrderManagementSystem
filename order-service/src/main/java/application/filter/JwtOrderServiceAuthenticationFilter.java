@@ -35,6 +35,7 @@ public class JwtOrderServiceAuthenticationFilter extends OncePerRequestFilter {
             try {
                 Jws<Claims> claims = jwtUtil.validateToken(token);
                 String username = claims.getBody().getSubject();
+                logger.info("User authenticated: " + username);
 
                 UserDetails userDetails = new User(username, "", Collections.emptyList());
                 UsernamePasswordAuthenticationToken auth =
