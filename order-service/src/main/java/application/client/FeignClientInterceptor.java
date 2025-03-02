@@ -24,7 +24,7 @@ public class FeignClientInterceptor implements RequestInterceptor {
             if (token != null) {
                 template.header(AUTHORIZATION_HEADER, token);
             } else {
-                logger.info("No token found in request");
+                logger.warning("No token found in request");
             }
         } else {
             logger.warning("RequestAttributes is null");
