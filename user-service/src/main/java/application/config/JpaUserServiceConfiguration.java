@@ -21,5 +21,4 @@ public class JpaUserServiceConfiguration {
     public ModelMapper modelMapper() {
         return new ModelMapper();
     }
-
 }

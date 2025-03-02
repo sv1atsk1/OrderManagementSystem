@@ -3,6 +3,7 @@ package application.service;
 import application.client.ProductServiceClient;
 import application.dto.OrderItemDTO;
 import application.entity.OrderItem;
+import application.exception.ErrorMessages;
 import application.exception.OrderItemNotFoundException;
 import application.repository.OrderItemRepository;
 import jakarta.transaction.Transactional;
@@ -23,10 +24,10 @@ public class OrderItemServiceImpl implements OrderItemService {
     @Override
     public OrderItemDTO createOrderItem(OrderItemDTO orderItemDTO) {
         if (orderItemDTO == null) {
-            throw new IllegalArgumentException("OrderItemDTO cannot be null");
+            throw new IllegalArgumentException(ErrorMessages.ORDER_ITEM_DTO_NULL.getMessage());
         }
         if (orderItemDTO.getProductId() == null) {
-            throw new IllegalArgumentException("Product ID cannot be null");
+            throw new IllegalArgumentException(ErrorMessages.PRODUCT_ID_NULL.getMessage());
         }
         productServiceClient.getProductById(orderItemDTO.getProductId());
         OrderItem orderItem = modelMapper.map(orderItemDTO, OrderItem.class);
@@ -37,7 +38,7 @@ public class OrderItemServiceImpl implements OrderItemService {
     @Override
     public OrderItemDTO getOrderItemById(Long id) {
         if (id == null) {
-            throw new IllegalArgumentException("ID cannot be null");
+            throw new IllegalArgumentException(ErrorMessages.ID_NULL.getMessage());
         }
         OrderItem orderItem = orderItemRepository.findById(id)
                 .orElseThrow(() -> new OrderItemNotFoundException(id));
@@ -54,10 +55,10 @@ public class OrderItemServiceImpl implements OrderItemService {
     @Override
     public OrderItemDTO updateOrderItem(Long id, OrderItemDTO orderItemDTO) {
         if (orderItemDTO == null) {
-            throw new IllegalArgumentException("OrderItemDTO cannot be null");
+            throw new IllegalArgumentException(ErrorMessages.ORDER_ITEM_DTO_NULL.getMessage());
         }
         if (orderItemDTO.getProductId() == null) {
-            throw new IllegalArgumentException("Product ID cannot be null");
+            throw new IllegalArgumentException(ErrorMessages.PRODUCT_ID_NULL.getMessage());
         }
         OrderItem orderItem = orderItemRepository.findById(id)
                 .orElseThrow(() -> new OrderItemNotFoundException(id));
@@ -71,7 +72,7 @@ public class OrderItemServiceImpl implements OrderItemService {
     @Transactional
     public OrderItemDTO patchOrderItem(Long id, OrderItemDTO orderItemDTO) {
         if (orderItemDTO == null) {
-            throw new IllegalArgumentException("OrderItemDTO cannot be null");
+            throw new IllegalArgumentException(ErrorMessages.ORDER_ITEM_DTO_NULL.getMessage());
         }
         OrderItem orderItem = orderItemRepository.findById(id)
                 .orElseThrow(() -> new OrderItemNotFoundException(id));
@@ -90,7 +91,7 @@ public class OrderItemServiceImpl implements OrderItemService {
     @Override
     public void deleteOrderItem(Long id) {
         if (id == null) {
-            throw new IllegalArgumentException("ID cannot be null");
+            throw new IllegalArgumentException(ErrorMessages.ID_NULL.getMessage());
         }
         orderItemRepository.deleteById(id);
     }

@@ -7,6 +7,7 @@ import application.dto.OrderDTO;
 import application.dto.OrderItemDTO;
 import application.entity.OrderEntity;
 import application.entity.OrderItem;
+import application.exception.ErrorMessages;
 import application.exception.OrderItemNotFoundException;
 import application.exception.OrderNotFoundException;
 import application.repository.OrderEntityRepository;
@@ -29,10 +30,10 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public OrderDTO createOrder(OrderDTO orderDTO) {
         if (orderDTO == null) {
-            throw new IllegalArgumentException("OrderDTO cannot be null");
+            throw new IllegalArgumentException(ErrorMessages.ORDER_DTO_NULL.getMessage());
         }
         if (orderDTO.getUserId() == null) {
-            throw new IllegalArgumentException("User ID cannot be null");
+            throw new IllegalArgumentException(ErrorMessages.USER_ID_NULL.getMessage());
         }
         userServiceClient.getUserById(orderDTO.getUserId());
 
@@ -60,7 +61,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderDTO getOrderById(Long id) {
         if (id == null) {
-            throw new IllegalArgumentException("ID cannot be null");
+            throw new IllegalArgumentException(ErrorMessages.ID_NULL.getMessage());
         }
         OrderEntity order = orderEntityRepository.findById(id)
                 .orElseThrow(() -> new OrderNotFoundException(id));
@@ -84,10 +85,10 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public OrderDTO updateOrder(Long id, OrderDTO orderDTO) {
         if (orderDTO == null) {
-            throw new IllegalArgumentException("OrderDTO cannot be null");
+            throw new IllegalArgumentException(ErrorMessages.ORDER_DTO_NULL.getMessage());
         }
         if (orderDTO.getUserId() == null) {
-            throw new IllegalArgumentException("User ID cannot be null");
+            throw new IllegalArgumentException(ErrorMessages.USER_ID_NULL.getMessage());
         }
         OrderEntity order = orderEntityRepository.findById(id)
                 .orElseThrow(() -> new OrderNotFoundException(id));
@@ -119,7 +120,7 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public OrderDTO patchOrder(Long id, OrderDTO orderDTO) {
         if (orderDTO == null) {
-            throw new IllegalArgumentException("OrderDTO cannot be null");
+            throw new IllegalArgumentException(ErrorMessages.ORDER_DTO_NULL.getMessage());
         }
         OrderEntity order = orderEntityRepository.findById(id)
                 .orElseThrow(() -> new OrderItemNotFoundException(id));
@@ -138,7 +139,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void deleteOrder(Long id) {
         if (id == null) {
-            throw new IllegalArgumentException("ID cannot be null");
+            throw new IllegalArgumentException(ErrorMessages.ID_NULL.getMessage());
         }
         orderEntityRepository.deleteById(id);
     }

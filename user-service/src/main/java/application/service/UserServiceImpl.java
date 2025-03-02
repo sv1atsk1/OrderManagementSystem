@@ -2,46 +2,36 @@ package application.service;
 
 import application.dto.UserDTO;
 import application.entity.User;
+import application.exception.ErrorMessages;
 import application.exception.UserNotFoundException;
 import application.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
     private final PasswordEncoder passwordEncoder;
 
-    private static final Logger logger = Logger.getLogger(UserServiceImpl.class.getName());
-
-    public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.modelMapper = modelMapper;
-        this.passwordEncoder = passwordEncoder;
-    }
-
     @Override
     public UserDTO registerUser(UserDTO userDTO) {
-        String encodedPassword = passwordEncoder.encode(userDTO.getPassword());
-        logger.info("Encoding password for user: " + userDTO.getUsername());
-        logger.info("Encoded password: " + encodedPassword);
+        validateUserDTO(userDTO);
         User user = modelMapper.map(userDTO, User.class);
-        user.setUsername(userDTO.getUsername());
-        user.setPassword(encodedPassword);
-        user.setEmail(userDTO.getEmail());
-        User savedUser = userRepository.save(user);
-        return modelMapper.map(savedUser, UserDTO.class);
+        return saveUser(userDTO, user);
     }
 
     @Override
     public UserDTO getUserById(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException(ErrorMessages.USER_ID_NULL.getMessage());
+        }
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
         return modelMapper.map(user, UserDTO.class);
@@ -49,6 +39,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO getUserByUsername(String username) {
+        if (username == null || username.isBlank()) {
+            throw new IllegalArgumentException(ErrorMessages.USERNAME_NULL_OR_BLANK.getMessage());
+        }
         User user = userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException(username));
         return modelMapper.map(user, UserDTO.class);
     }
@@ -57,11 +50,13 @@ public class UserServiceImpl implements UserService {
     public List<UserDTO> getAllUsers() {
         return userRepository.findAll().stream()
                 .map(user -> modelMapper.map(user, UserDTO.class))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
     public UserDTO partialUpdateUser(Long id, UserDTO userDTO) {
+        validateIdAndUserDTO(id,userDTO);
+
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
 
@@ -81,8 +76,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO updateUser(Long id, UserDTO userDTO) {
+        validateIdAndUserDTO(id, userDTO);
+
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
+
+        if (userDTO.getUsername() == null || userDTO.getUsername().isBlank()) {
+            throw new IllegalArgumentException(ErrorMessages.USERNAME_NULL_OR_BLANK.getMessage());
+        }
+        if (userDTO.getEmail() == null || userDTO.getEmail().isBlank()) {
+            throw new IllegalArgumentException(ErrorMessages.EMAIL_NULL_OR_BLANK.getMessage());
+        }
         modelMapper.map(userDTO, user);
         if (userDTO.getPassword() != null && !userDTO.getPassword().isBlank()) {
             user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
@@ -93,6 +97,45 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException(ErrorMessages.USER_ID_NULL.getMessage());
+        }
+        if (!userRepository.existsById(id)) {
+            throw new UserNotFoundException(id);
+        }
         userRepository.deleteById(id);
+    }
+
+    private void validateUserDTO(UserDTO userDTO) {
+        if (userDTO == null) {
+            throw new IllegalArgumentException(ErrorMessages.USER_DTO_NULL.getMessage());
+        }
+        if (userDTO.getPassword() == null || userDTO.getPassword().isBlank()) {
+            throw new IllegalArgumentException(ErrorMessages.PASSWORD_NULL_OR_BLANK.getMessage());
+        }
+        if (userDTO.getUsername() == null || userDTO.getUsername().isBlank()) {
+            throw new IllegalArgumentException(ErrorMessages.USERNAME_NULL_OR_BLANK.getMessage());
+        }
+        if (userDTO.getEmail() == null || userDTO.getEmail().isBlank()) {
+            throw new IllegalArgumentException(ErrorMessages.EMAIL_NULL_OR_BLANK.getMessage());
+        }
+    }
+
+    private void validateIdAndUserDTO(Long id, UserDTO userDTO) {
+        if (id == null) {
+            throw new IllegalArgumentException(ErrorMessages.ID_NULL.getMessage());
+        }
+        if (userDTO == null) {
+            throw new IllegalArgumentException(ErrorMessages.USER_DTO_NULL.getMessage());
+        }
+    }
+
+    private UserDTO saveUser(UserDTO userDTO, User user) {
+        String encodedPassword = passwordEncoder.encode(userDTO.getPassword());
+        user.setUsername(userDTO.getUsername());
+        user.setPassword(encodedPassword);
+        user.setEmail(userDTO.getEmail());
+        User savedUser = userRepository.save(user);
+        return modelMapper.map(savedUser, UserDTO.class);
     }
 }
