@@ -12,8 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestControllerAdvice(basePackages = "application.exception")
-public class UserServiceGlobalExceptionHandler {
-
+public class AuthServiceGlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
@@ -22,26 +21,26 @@ public class UserServiceGlobalExceptionHandler {
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ErrorDetails> handleIllegalArgumentException(IllegalArgumentException ex, WebRequest request) {
+    @ExceptionHandler(InvalidAccessException.class)
+    public ResponseEntity<ErrorDetails> handleInvalidAccessException(InvalidAccessException ex, WebRequest request) {
         ErrorDetails errorDetails = new ErrorDetails(
                 LocalDateTime.now(),
                 ex.getMessage(),
                 request.getDescription(false),
-                "INVALID_ARGUMENT"
+                "INVALID_ACCESS"
         );
-        return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(errorDetails, HttpStatus.UNAUTHORIZED);
     }
 
-    @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<ErrorDetails> handleUserNotFoundException(UserNotFoundException ex, WebRequest request) {
+    @ExceptionHandler(InvalidAuthHeaderException.class)
+    public ResponseEntity<ErrorDetails> handleInvalidAuthHeaderException(InvalidAuthHeaderException ex, WebRequest request) {
         ErrorDetails errorDetails = new ErrorDetails(
-                ex.getTimestamp(),
+                LocalDateTime.now(),
                 ex.getMessage(),
                 request.getDescription(false),
-                "USER_NOT_FOUND"
+                "INVALID_AUTH_HEADER"
         );
-        return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(Exception.class)

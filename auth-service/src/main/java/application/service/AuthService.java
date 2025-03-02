@@ -3,17 +3,15 @@ package application.service;
 import application.client.UserServiceClient;
 import application.dto.AuthRequest;
 import io.jsonwebtoken.Claims;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class AuthService {
-    private JWTService jwtService;
-    private final UserServiceClient userServiceClient;
 
-    public AuthService(JWTService jwtService, UserServiceClient userServiceClient) {
-        this.jwtService = jwtService;
-        this.userServiceClient = userServiceClient;
-    }
+    private final JWTService jwtService;
+    private final UserServiceClient userServiceClient;
 
     public String generateToken(String userName) {
         return jwtService.generateToken(userName);

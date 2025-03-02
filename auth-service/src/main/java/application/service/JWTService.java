@@ -1,9 +1,8 @@
 package application.service;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import application.exception.ExpiredJwtTokenException;
+import application.exception.InvalidJwtTokenException;
+import io.jsonwebtoken.*;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.spec.SecretKeySpec;
@@ -18,8 +17,6 @@ import java.util.logging.Logger;
 public class JWTService {
 
     public static final String SECRET = "";
-
-    private static final Logger logger = Logger.getLogger(JWTService.class.getName());
     private static final long EXPIRATION_TIME = 900000;
 
     public Claims validateToken(String token) {
@@ -29,13 +26,14 @@ public class JWTService {
                     .build()
                     .parseClaimsJws(token);
             return claimsJws.getBody();
-        } catch (Exception e) {
-            throw new RuntimeException("Invalid JWT token: " + e.getMessage());
+        } catch (ExpiredJwtException e) {
+            throw new ExpiredJwtTokenException("JWT token has expired");
+        } catch (JwtException e) {
+            throw new InvalidJwtTokenException("Invalid JWT token: " + e.getMessage());
         }
     }
 
     public String generateToken(String userName) {
-        logger.info("Generating token for user: " + userName);
         Map<String, Object> claims = new HashMap<>();
         claims.put("username", userName);
 
