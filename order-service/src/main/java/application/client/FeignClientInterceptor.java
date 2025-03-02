@@ -23,12 +23,11 @@ public class FeignClientInterceptor implements RequestInterceptor {
             String token = request.getHeader(AUTHORIZATION_HEADER);
             if (token != null) {
                 template.header(AUTHORIZATION_HEADER, token);
-                logger.info("Token added to Feign request: " + token);
             } else {
                 logger.info("No token found in request");
             }
         } else {
-            logger.info("RequestAttributes is null");
+            logger.warning("RequestAttributes is null");
         }
     }
 }

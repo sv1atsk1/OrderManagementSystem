@@ -6,26 +6,28 @@ import application.entity.OrderItem;
 import application.exception.OrderItemNotFoundException;
 import application.repository.OrderItemRepository;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class OrderItemServiceImpl implements OrderItemService {
+
     private final OrderItemRepository orderItemRepository;
     private final ModelMapper modelMapper;
     private final ProductServiceClient productServiceClient;
 
-    public OrderItemServiceImpl(OrderItemRepository orderItemRepository, ModelMapper modelMapper, ProductServiceClient productServiceClient) {
-        this.orderItemRepository = orderItemRepository;
-        this.modelMapper = modelMapper;
-        this.productServiceClient = productServiceClient;
-    }
-
     @Override
     public OrderItemDTO createOrderItem(OrderItemDTO orderItemDTO) {
+        if (orderItemDTO == null) {
+            throw new IllegalArgumentException("OrderItemDTO cannot be null");
+        }
+        if (orderItemDTO.getProductId() == null) {
+            throw new IllegalArgumentException("Product ID cannot be null");
+        }
         productServiceClient.getProductById(orderItemDTO.getProductId());
         OrderItem orderItem = modelMapper.map(orderItemDTO, OrderItem.class);
         OrderItem savedOrderItem = orderItemRepository.save(orderItem);
@@ -34,6 +36,9 @@ public class OrderItemServiceImpl implements OrderItemService {
 
     @Override
     public OrderItemDTO getOrderItemById(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("ID cannot be null");
+        }
         OrderItem orderItem = orderItemRepository.findById(id)
                 .orElseThrow(() -> new OrderItemNotFoundException(id));
         return modelMapper.map(orderItem, OrderItemDTO.class);
@@ -43,11 +48,17 @@ public class OrderItemServiceImpl implements OrderItemService {
     public List<OrderItemDTO> getOrderItemsByOrderId(Long orderId) {
         return orderItemRepository.findByOrderEntityId(orderId).stream()
                 .map(orderItem -> modelMapper.map(orderItem, OrderItemDTO.class))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
     public OrderItemDTO updateOrderItem(Long id, OrderItemDTO orderItemDTO) {
+        if (orderItemDTO == null) {
+            throw new IllegalArgumentException("OrderItemDTO cannot be null");
+        }
+        if (orderItemDTO.getProductId() == null) {
+            throw new IllegalArgumentException("Product ID cannot be null");
+        }
         OrderItem orderItem = orderItemRepository.findById(id)
                 .orElseThrow(() -> new OrderItemNotFoundException(id));
         productServiceClient.getProductById(orderItemDTO.getProductId());
@@ -59,6 +70,9 @@ public class OrderItemServiceImpl implements OrderItemService {
     @Override
     @Transactional
     public OrderItemDTO patchOrderItem(Long id, OrderItemDTO orderItemDTO) {
+        if (orderItemDTO == null) {
+            throw new IllegalArgumentException("OrderItemDTO cannot be null");
+        }
         OrderItem orderItem = orderItemRepository.findById(id)
                 .orElseThrow(() -> new OrderItemNotFoundException(id));
 
@@ -75,6 +89,9 @@ public class OrderItemServiceImpl implements OrderItemService {
 
     @Override
     public void deleteOrderItem(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("ID cannot be null");
+        }
         orderItemRepository.deleteById(id);
     }
 }
