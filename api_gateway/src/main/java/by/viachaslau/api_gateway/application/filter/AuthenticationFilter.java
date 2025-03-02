@@ -1,5 +1,9 @@
 package by.viachaslau.api_gateway.application.filter;
 
+import by.viachaslau.api_gateway.application.exception.ErrorMessages;
+import by.viachaslau.api_gateway.application.exception.InvalidAuthHeaderException;
+import by.viachaslau.api_gateway.application.exception.MissingAuthHeaderException;
+import by.viachaslau.api_gateway.application.exception.UnauthorizedAccessException;
 import by.viachaslau.api_gateway.application.util.JwtUtil;
 import jakarta.ws.rs.core.HttpHeaders;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +35,7 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
             if (validator.isSecured.test(exchange.getRequest())) {
                 if (!exchange.getRequest().getHeaders().containsKey(HttpHeaders.AUTHORIZATION)) {
                     logger.info("Missing authorization header for request: " + exchange.getRequest().getURI());
-                    throw new RuntimeException("missing authorization header");
+                    throw new MissingAuthHeaderException(ErrorMessages.MISSING_AUTH_HEADER.getMessage());
                 }
 
                 String authHeader = exchange.getRequest().getHeaders().get(HttpHeaders.AUTHORIZATION).get(0);
@@ -40,7 +44,7 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
                     logger.info("Token extracted:" + authHeader);
                 } else {
                     logger.info("Invalid authorization header format for request: " + exchange.getRequest().getURI());
-                    throw new RuntimeException("invalid authorization header format");
+                    throw new InvalidAuthHeaderException(ErrorMessages.INVALID_AUTH_HEADER_FORMAT.getMessage());
                 }
                 try {
                     jwtUtil.validateToken(authHeader);
@@ -52,7 +56,7 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
 
                 } catch (Exception e) {
                     logger.info("Invalid access for request: " + exchange.getRequest().getURI());
-                    throw new RuntimeException("un authorized access to application");
+                    throw new UnauthorizedAccessException(ErrorMessages.UNAUTHORIZED_ACCESS.getMessage());
                 }
             }
             return chain.filter(exchange);
@@ -60,6 +64,5 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
     }
 
     public static class Config {
-
     }
 }
