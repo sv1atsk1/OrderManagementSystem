@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-@RestControllerAdvice(basePackages = "application.exception")
+@RestControllerAdvice
 public class AuthServiceGlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException ex) {

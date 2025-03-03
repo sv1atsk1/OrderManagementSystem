@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-@RestControllerAdvice(basePackages = "application.exception")
+@RestControllerAdvice
 public class OrderServiceGlobalExceptionHandler {
 
     @ExceptionHandler(OrderItemNotFoundException.class)

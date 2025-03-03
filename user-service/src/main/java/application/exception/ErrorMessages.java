@@ -12,6 +12,7 @@ public enum ErrorMessages {
     EMAIL_NULL_OR_BLANK("Email cannot be null or blank"),
     PASSWORD_NULL_OR_BLANK("Password cannot be null or blank"),
     ID_NULL("ID cannot be null"),
+    INVALID_EMAIL_FORMAT("Please enter the correct email format"),
     USER_ID_NULL("User ID cannot be null");
 
     private final String message;

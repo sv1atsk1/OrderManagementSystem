@@ -22,6 +22,7 @@ public class OrderItemServiceImpl implements OrderItemService {
     private final ProductServiceClient productServiceClient;
 
     @Override
+    @Transactional
     public OrderItemDTO createOrderItem(OrderItemDTO orderItemDTO) {
         if (orderItemDTO == null) {
             throw new IllegalArgumentException(ErrorMessages.ORDER_ITEM_DTO_NULL.getMessage());

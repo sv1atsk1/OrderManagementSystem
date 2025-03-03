@@ -5,10 +5,12 @@ import application.entity.User;
 import application.exception.ErrorMessages;
 import application.exception.UserNotFoundException;
 import application.repository.UserRepository;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
@@ -21,7 +23,7 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public UserDTO registerUser(UserDTO userDTO) {
+    public UserDTO registerUser(@Valid @RequestBody UserDTO userDTO) {
         validateUserDTO(userDTO);
         User user = modelMapper.map(userDTO, User.class);
         return saveUser(userDTO, user);
@@ -54,7 +56,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO partialUpdateUser(Long id, UserDTO userDTO) {
+    public UserDTO partialUpdateUser(Long id, @Valid @RequestBody UserDTO userDTO) {
         validateIdAndUserDTO(id,userDTO);
 
         User user = userRepository.findById(id)
@@ -75,7 +77,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO updateUser(Long id, UserDTO userDTO) {
+    public UserDTO updateUser(Long id, @Valid @RequestBody UserDTO userDTO) {
         validateIdAndUserDTO(id, userDTO);
 
         User user = userRepository.findById(id)
@@ -119,6 +121,14 @@ public class UserServiceImpl implements UserService {
         if (userDTO.getEmail() == null || userDTO.getEmail().isBlank()) {
             throw new IllegalArgumentException(ErrorMessages.EMAIL_NULL_OR_BLANK.getMessage());
         }
+        if (!isValidEmail(userDTO.getEmail())) {
+            throw new IllegalArgumentException(ErrorMessages.INVALID_EMAIL_FORMAT.getMessage());
+        }
+    }
+
+    private boolean isValidEmail(String email) {
+        String emailRegex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
+        return email.matches(emailRegex);
     }
 
     private void validateIdAndUserDTO(Long id, UserDTO userDTO) {

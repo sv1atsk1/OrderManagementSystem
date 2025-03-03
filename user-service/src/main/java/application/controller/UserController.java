@@ -3,6 +3,7 @@ package application.controller;
 import application.dto.UserDTO;
 import application.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,18 +17,21 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/register")
-    public void registerUser(@RequestBody UserDTO userDTO) {
-        userService.registerUser(userDTO);
+    public ResponseEntity<UserDTO> registerUser(@RequestBody UserDTO userDTO) {
+        UserDTO registeredUser = userService.registerUser(userDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(registeredUser);
     }
 
     @GetMapping("/username/{username}")
-    public UserDTO getUserByUsername(@PathVariable("username") String username) {
-        return userService.getUserByUsername(username);
+    public ResponseEntity<UserDTO> getUserByUsername(@PathVariable("username") String username) {
+        UserDTO user = userService.getUserByUsername(username);
+        return ResponseEntity.ok(user);
     }
 
     @GetMapping("/id/{id}")
-    public UserDTO getUserById(@PathVariable("id") Long id) {
-        return userService.getUserById(id);
+    public ResponseEntity<UserDTO> getUserById(@PathVariable("id") Long id) {
+        UserDTO user = userService.getUserById(id);
+        return ResponseEntity.ok(user);
     }
 
     @GetMapping
