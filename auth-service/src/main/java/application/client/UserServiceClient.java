@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @FeignClient(name = "user-service", url = "http://localhost:8083")
 public interface UserServiceClient {
-    @GetMapping("/users/username/{username}")
+    @GetMapping("/api/v1/users/username/{username}")
     AuthRequest getUserByUsername(@PathVariable("username") String username);
 
-    @PostMapping("/users/register")
+    @PostMapping("/api/v1/users/register")
     void registerUser(@RequestBody AuthRequest authRequest);
 }

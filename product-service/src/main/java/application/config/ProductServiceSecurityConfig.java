@@ -29,7 +29,7 @@ public class ProductServiceSecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/products/{id}").permitAll()
+                        .requestMatchers("/api/v1/products/{id}").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(new JwtProductServiceAuthenticationFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);

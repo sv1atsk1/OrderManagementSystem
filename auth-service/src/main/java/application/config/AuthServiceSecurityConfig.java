@@ -39,7 +39,7 @@ public class AuthServiceSecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/register", "/users/register", "/users/username/{username}", "/auth/token", "/auth/validate").permitAll()
+                        .requestMatchers("/api/v1/auth/register", "/api/v1/users/register", "/api/v1/users/username/{username}", "/api/v1/auth/token", "/api/v1/auth/validate").permitAll()
                         .anyRequest().authenticated()
                 );
 
