@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@FeignClient(name = "user-service", url = "http://localhost:8083")
+@FeignClient(name = "user-service", url = "http://USER-SERVICE:8083")
 public interface UserServiceClient {
     @GetMapping("/api/v1/users/username/{username}")
     AuthRequest getUserByUsername(@PathVariable("username") String username);
